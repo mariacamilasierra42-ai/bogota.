@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Bogotá — Mapa Electoral 2026 + Entidades Gabinete Galán</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: Arial, sans-serif; background: #F8F6F2; color: #1C1C1C; padding: 16px; }
+h1 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+.sub { font-size: 13px; color: #666; margin-bottom: 14px; }
+.wrap { display: grid; grid-template-columns: 1fr 340px; gap: 16px; }
+.tab-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.tab { font-size: 12px; padding: 5px 14px; border-radius: 20px; border: 1px solid #aaa;
+       background: #eee; color: #555; cursor: pointer; }
+.tab.on { background: #1C1C1C; color: white; border-color: #1C1C1C; }
+.panel { display: flex; flex-direction: column; gap: 10px; }
+.panel-top { background: #EFEFEF; border-radius: 10px; padding: 12px; }
+.panel-detail { background: white; border: 1px solid #ddd; border-radius: 10px;
+                padding: 14px; min-height: 300px; }
+.bar-row { display: flex; align-items: center; gap: 6px; margin: 4px 0; }
+.bar-label { font-size: 11px; color: #666; width: 100px; flex-shrink: 0; }
+.bar-track { flex: 1; background: #ddd; border-radius: 3px; height: 7px; overflow: hidden; }
+.bar-fill { height: 7px; border-radius: 3px; }
+.bar-val { font-size: 11px; font-weight: 700; width: 38px; text-align: right; flex-shrink: 0; }
+.loc-name { font-size: 17px; font-weight: 700; margin-bottom: 2px; }
+.loc-sub { font-size: 12px; color: #888; }
+.sec-label { font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase;
+             letter-spacing: 0.05em; margin: 10px 0 4px; }
+.ent-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 11px;
+            padding: 3px 9px; border-radius: 20px; margin: 2px; font-weight: 700; }
+.legend-row { display: flex; align-items: center; gap: 6px; font-size: 11px;
+              color: #555; margin: 3px 0; }
+.legend-sq { width: 13px; height: 13px; border-radius: 2px; flex-shrink: 0; }
+.hint { font-size: 12px; color: #888; font-style: italic; text-align: center; margin-top: 8px; }
+.loc { cursor: pointer; }
+.loc:hover polygon, .loc:hover path { opacity: 0.82; }
+.alerta { background: #D32F2F; color: white; font-size: 10px; font-weight: 700;
+          padding: 2px 8px; border-radius: 10px; margin-left: 6px; vertical-align: middle; }
+.recup  { background: #E65100; color: white; font-size: 10px; font-weight: 700;
+          padding: 2px 8px; border-radius: 10px; margin-left: 6px; vertical-align: middle; }
+.oposi  { background: #1A4F7A; color: white; font-size: 10px; font-weight: 700;
+          padding: 2px 8px; border-radius: 10px; margin-left: 6px; vertical-align: middle; }
+.fuente { font-size: 10px; color: #aaa; margin-top: 18px; }
+</style>
+</head>
+<body>
+<h1>Bogotá D.C. — Mapa Electoral Cámara 2026 + Entidades Gabinete Galán</h1>
+<div class="sub">Haz clic en una localidad para ver el resultado electoral y qué entidades deben llegar para recuperar confianza · Datos: Registraduría Nacional · 8 mar 2026</div>
+
+<div class="wrap">
+<div>
+  <div class="tab-row">
+    <div class="tab on" onclick="setView('electoral')" id="tab-e">Resultado electoral 2026</div>
+    <div class="tab" onclick="setView('entidades')" id="tab-n">Entidades que deben llegar</div>
+  </div>
+  <svg id="mapSvg" viewBox="0 0 420 440" style="width:100%;display:block;">
+    <g class="loc" id="l-usaquen" onclick="selLoc('usaquen')">
+      <polygon points="210,10 310,10 320,40 300,70 260,80 220,60 200,35" fill="#ccc" stroke="white" stroke-width="1.2"/>
+      <text x="258" y="46" text-anchor="middle" font-size="8.5" fill="white" font-weight="700" pointer-events="none">Usaquén</text>
+    </g>
+    <g class="loc" id="l-chapinero" onclick="selLoc('chapinero')">
+      <polygon points="200,35 220,60 210,90 190,105 170,90 175,60" fill="#ccc" stroke="white" stroke-width="1.2"/>
+      <text x="195" y="75" text-anchor="middle" font-size="8" fill="white" font-weight="700" pointer-events="none">Chapinero</text>
+    </g>
+    <g class="loc" id="l-santafe" onclick="selLoc('santafe')">
+      <polygon points="190,105 210,90 230,110 220,135 195,140 180,125" fill="#ccc" stroke="white" stroke-width="1.2"/>
+      <text x="205" y="120" text-anchor="middle" font-size="8" fill="white" font-weight="700" pointer-events="none">Santa Fe</text>
+    </g>
+    <g class="loc" id="l-sancristobal" onclick="selLoc('sancristobal')">
+      <polygon points="220,135 240,115 270,130 275,165 250,175 225,165" fill="#ccc" stroke="white" stroke-width="1.2"/>
+      <text x="250" y="150" text-anchor="middle" font-size="8" fill="white" font-weight="700" pointer-events="none">San Cristóbal</text>
+    </g>
+    <g class="loc" id="l-usme" onclick="selLoc('usme')">
+      <polygon points="250,175 275,165 295,185 300,230 270,260 240,250 230,210" fill="#ccc" stroke="white" stroke-width="1.2"/>
+      <text x="265" y="215" text-anchor="middle" font-size="8.5" fill="white" font-weight="700" pointer-events="none">Usme</text>
+    </g>
+    <g class="loc" id="l-tunjuelito" onclick="selLoc('tunjuelito')">
+      <polygon points="195,175 225,165 230,195 215,210 190,205" fill="#ccc" stroke="white" stroke-width="1.2"/>
+      <text x="208" y="192" text-anchor="middle" font-size="7.5" fill="white" font-weight="700" pointer-events="none">Tunjuelito</text>
+    </g>
+    <g class="loc" id="l-bosa" onclick="selLoc('bosa')">
+      <polygon points="100,270 130,250 165,255 170,285 145,310 100,300" fill="#ccc" stroke="white" stroke-width="1.2"/>
+      <text x="135" y="282" text-anchor="middle" font-size="8.5" fill="white" font-weight="700" pointer-events="none">Bosa</text>
+    </g>
+    <g class="loc" id="l-kennedy" onclick="selLoc('kennedy')">
+      <polygon points="130,220 165,210 190,205 195,230 185,260 165,265 130,255" fill="#ccc" stroke="white" stroke-width="1.2"/>
+      <text x="162" y="238" text-anchor="middle" font-size="8.5" fill="white" font-weight="700" pointer-events="none">Kennedy</text>
+    </g>
+    <g class="loc" id="l-fontibon" onclick="selLoc('fontibon')">
+      <polygon points="85,190 120,185 130,205 130,225 105,230 80,215" fill="#ccc" stroke="white" stroke-width="1.2"/>
+      <text x="107" y="210" text-anchor="middle" font-size="8" fill="white" font-weight="700" pointer-events="none">Fontibón</text>
+    </g>
+    <g class="loc" id="l-engativa" onclick="selLoc('engativa')">
+      <polygon points="80,130 120,125 135,145 130,175 85,180 70,160" fill="#ccc" stroke="white" stroke-width="1.2"/>
+      <text x="103" y="155" text-anchor="middle" font-size="8.5" fill="white" font-weight="700" pointer-events="none">Engativá</text>
+    </g>
+    <g class="loc" id="l-suba" onclick="selLoc('suba')">
+      <polygon points="75,30 170,15 175,55 165,80 140,100 110,95 80,80 65,60" fill="#ccc" stroke="white" stroke-width="1.2"/>
+      <text x="122" y="60" text-anchor="middle" font-size="9" fill="white" font-weight="700" pointer-events="none">Suba</text>
+    </g>
+    <g class="loc" id="l-barriosunidos" onclick="selLoc('barriosunidos')">
+      <polygon points="155,88 170,80 185,90 180,110 165,115 150,108" fill="#ccc" stroke="white" stroke-width="1.2"/>
+      <text x="167" y="102" text-anchor="middle" font-size="7" fill="white" font-weight="700" pointer-events="none">B. Unidos</text>
+    </g>
+    <g class="loc" id="l-teusaquillo" onclick="selLoc('teusaquillo')">
+      <polygon points="148,110 165,105 175,115 172,130 155,135 142,125" fill="#ccc" stroke="white" stroke-width="1.2"/>
+      <text x="158" y="122" text-anchor="middle" font-size="7" fill="white" font-weight="700" pointer-events="none">Teusaquillo</text>
+    </g>
+    <g class="loc" id="l-martires" onclick="selLoc('martires')">
+      <polygon points="162,135 180,130 185,145 178,158 160,155 155,142" fill="#ccc" stroke="white" stroke-width="1.2"/>
+      <text x="170" y="147" text-anchor="middle" font-size="7" fill="white" font-weight="700" pointer-events="none">Mártires</text>
+    </g>
+    <g class="loc" id="l-antonionarino" onclick="selLoc('antonionarino')">
+      <polygon points="185,148 200,143 210,155 205,168 188,168 180,158" fill="#ccc" stroke="white" stroke-width="1.2"/>
+      <text x="195" y="159" text-anchor="middle" font-size="7" fill="white" font-weight="700" pointer-events="none">Ant. Nariño</text>
+    </g>
+    <g class="loc" id="l-puentearanda" onclick="selLoc('puentearanda')">
+      <polygon points="140,160 165,155 178,165 175,185 155,192 130,185 125,170" fill="#ccc" stroke="white" stroke-width="1.2"/>
+      <text x="152" y="176" text-anchor="middle" font-size="7.5" fill="white" font-weight="700" pointer-events="none">Puente Aranda</text>
+    </g>
+    <g class="loc" id="l-candelaria" onclick="selLoc('candelaria')">
+      <polygon points="210,115 225,110 230,125 220,135 207,130" fill="#ccc" stroke="white" stroke-width="1.2"/>
+      <text x="218" y="125" text-anchor="middle" font-size="7" fill="white" font-weight="700" pointer-events="none">Candelaria</text>
+    </g>
+    <g class="loc" id="l-rafaeluribe" onclick="selLoc('rafaeluribe')">
+      <polygon points="210,165 230,160 245,175 240,200 215,205 200,192 205,170" fill="#ccc" stroke="white" stroke-width="1.2"/>
+      <text x="222" y="185" text-anchor="middle" font-size="7.5" fill="white" font-weight="700" pointer-events="none">Rafael Uribe</text>
+    </g>
+    <g class="loc" id="l-ciudadbolivar" onclick="selLoc('ciudadbolivar')">
+      <polygon points="130,290 165,265 200,265 215,285 230,320 210,355 175,368 140,348 110,318" fill="#ccc" stroke="white" stroke-width="1.2"/>
+      <text x="170" y="315" text-anchor="middle" font-size="9" fill="white" font-weight="700" pointer-events="none">Ciudad Bolívar</text>
+    </g>
+    <g class="loc" id="l-sumapaz" onclick="selLoc('sumapaz')">
+      <polygon points="210,355 240,335 262,352 258,392 228,408 195,392" fill="#ccc" stroke="white" stroke-width="1.2"/>
+      <text x="228" y="378" text-anchor="middle" font-size="8" fill="white" font-weight="700" pointer-events="none">Sumapaz</text>
+    </g>
+    <text x="42" y="210" font-size="8" fill="#aaa" font-style="italic" transform="rotate(-80,42,210)">Río Bogotá</text>
+  </svg>
+  <div class="hint" id="map-hint">↑ Haz clic en una localidad para ver el detalle</div>
+  <div id="legend" style="margin-top:10px;"></div>
+  <div class="fuente">Fuente: Registraduría Nacional del Estado Civil · Resultados Cámara Bogotá 8 mar 2026 · Infobae 31 mar 2026 · Semana mar 2026 · BCV 2025</div>
+</div>
+
+<div class="panel">
+  <div class="panel-top">
+    <div style="font-size:12px;font-weight:700;color:#666;margin-bottom:7px;">Resultado Cámara Bogotá 2026 — total ciudad</div>
+    <div class="bar-row">
+      <div class="bar-label">Pacto Histórico</div>
+      <div class="bar-track"><div class="bar-fill" style="width:100%;background:#8B3CF7"></div></div>
+      <div class="bar-val" style="color:#8B3CF7">32.2%</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">C. Democrático</div>
+      <div class="bar-track"><div class="bar-fill" style="width:75%;background:#1A4F7A"></div></div>
+      <div class="bar-val" style="color:#1A4F7A">24.0%</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Alianza Verde</div>
+      <div class="bar-track"><div class="bar-fill" style="width:26%;background:#2E7D3E"></div></div>
+      <div class="bar-val" style="color:#2E7D3E">8.5%</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Nuevo Liberal.</div>
+      <div class="bar-track"><div class="bar-fill" style="width:11%;background:#D32F2F"></div></div>
+      <div class="bar-val" style="color:#D32F2F">3.6%</div>
+    </div>
+    <div style="margin-top:8px;padding:7px 10px;background:#fff0f0;border-radius:8px;border-left:3px solid #D32F2F;">
+      <div style="font-size:11px;color:#D32F2F;font-weight:700;">0 curules · 7.° lugar · 105k votos · logo solo: 18.5k</div>
+    </div>
+  </div>
+  <div class="panel-detail" id="detail">
+    <div style="font-size:13px;color:#888;text-align:center;padding:2rem 0;">
+      Selecciona una localidad en el mapa para ver el resultado electoral y las entidades que deben llegar.
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+const DATA = {
+  usaquen:       {n:'Usaquén',num:1,niv:'bajo',ganPct:38,nlPct:5,pacPct:22,desc:'Norte residencial de estrato alto. El CD dominó. El Nuevo Liberalismo no tuvo base. Galán ganó aquí con 50% en 2023 pero el voto legislativo fue diferente.',ents:[{n:'SDM',c:'#1A4F7A',t:'Movilidad'},{n:'IDU',c:'#1A4F7A',t:'Obras vías'},{n:'SCRD',c:'#7B341E',t:'Cultura'}],acc:'Priorizar obras de movilidad visibles y comunicación de avances. El ciudadano de estrato alto premia resultados tangibles. La brecha logros-percepción es máxima aquí.'},
+  chapinero:     {n:'Chapinero',num:2,niv:'bajo',ganPct:35,nlPct:6,pacPct:28,desc:'Diverso. Voto histórico de Alianza Verde migró a extremos. Zona LGBTIQ+ con demandas específicas de espacio y convivencia.',ents:[{n:'SDIS',c:'#4A235A',t:'Integración Social'},{n:'SCRD',c:'#7B341E',t:'Cultura'},{n:'SDGobierno',c:'#1C1C1C',t:'Gobierno local'}],acc:'Presencia en corredores culturales y espacio público. Articular con organizaciones comunitarias LGBTIQ+ y economía popular. Alcaldía local nueva desde ago 2025.'},
+  santafe:       {n:'Santa Fe',num:3,niv:'alto',ganPct:38,nlPct:4,pacPct:38,desc:'Centro histórico. Alta población vulnerable y habitante de calle. Voto de izquierda histórico fuerte.',ents:[{n:'SDIS',c:'#4A235A',t:'Integración Social'},{n:'SDSCJ',c:'#8B2020',t:'Seguridad'},{n:'SDS',c:'#8B2020',t:'Salud'}],acc:'Fortalecer atención a habitante de calle y economía popular. SDIS debe aumentar presencia en ollas. La inseguridad en el centro histórico ahuyenta ciudadanos y turistas.'},
+  sancristobal:  {n:'San Cristóbal',num:4,niv:'critico',ganPct:42,nlPct:3,pacPct:42,desc:'Sur popular. Voto de izquierda arraigado. Alto NBI. El Nuevo Liberalismo casi no existió aquí.',ents:[{n:'CVP',c:'#A07840',t:'Vivienda'},{n:'SDIS',c:'#4A235A',t:'Integración Social'},{n:'SDS',c:'#8B2020',t:'Salud — SER'}],acc:'Acciones concretas de Mejora Tu Casa y comedores. SDS debe activar modelo MAS Bienestar. Las subredes ESE deben acercar servicios al territorio. 2 comedores nuevos en esta adm.'},
+  usme:          {n:'Usme',num:5,niv:'critico',ganPct:48,nlPct:2,pacPct:48,desc:'Borde urbano-rural. El más rezagado en cobertura institucional. NBI alto. Voto de izquierda dominante. El Nuevo Liberalismo fue prácticamente inexistente.',ents:[{n:'CVP',c:'#A07840',t:'Vivienda — urgente'},{n:'SDP',c:'#1E4060',t:'Planeación'},{n:'SDS',c:'#8B2020',t:'Salud — SER'},{n:'SDIS',c:'#4A235A',t:'Integración Social'}],acc:'URGENTE: legalizar barrios pendientes (El Uval, Aurora, Villa Alemania). CVP escalar Mejora Tu Casa. SDS activar SER territorial. SDIS priorizar comedores. 3 comedores ya activos.'},
+  tunjuelito:    {n:'Tunjuelito',num:6,niv:'alto',ganPct:44,nlPct:3,pacPct:44,desc:'Localidad popular pequeña. Voto de izquierda consistente. Contaminación del Río Tunjuelo como problema visible.',ents:[{n:'SDA',c:'#2E6B3E',t:'Ambiente'},{n:'SDIS',c:'#4A235A',t:'Integración Social'},{n:'UAESP',c:'#888',t:'Servicios públicos'}],acc:'SDA debe actuar en recuperación del Río Tunjuelo. UAESP garantizar rutas de aseo. Comedores y programas SDIS son el punto de contacto más directo.'},
+  bosa:          {n:'Bosa',num:7,niv:'critico',ganPct:46,nlPct:3,pacPct:46,desc:'Conurbación con Soacha. Alto crecimiento informal. Pacto Histórico fuerte. El Parque La Esperanza (jun 2026) es la obra más visible de Galán aquí.',ents:[{n:'IDRD',c:'#2E6B3E',t:'Parque La Esperanza'},{n:'SDIS',c:'#4A235A',t:'3 comedores activos'},{n:'ACUEDUCTO',c:'#1E4060',t:'Servicios públicos'},{n:'IDPAC',c:'#1C1C1C',t:'JAC — 0 en programa'}],acc:'El Parque La Esperanza (jun 2026) es una oportunidad de comunicación. 3 comedores nuevos hay que comunicarlos más. Acueducto debe resolver déficit en borde con Soacha. IDPAC activar JAC (0 en programa actual).'},
+  kennedy:       {n:'Kennedy',num:8,niv:'alto',ganPct:40,nlPct:4,pacPct:40,desc:'La localidad más poblada de Bogotá. 9 JAC en Obras Pedagógicas de Galán — el único logro concreto visible. Voto dividido pero Pacto ganó.',ents:[{n:'IDPAC',c:'#1C1C1C',t:'9 JAC activas'},{n:'SDIS',c:'#4A235A',t:'Integración Social'},{n:'SDM',c:'#1A4F7A',t:'Movilidad'},{n:'IDIGER',c:'#2E6B3E',t:'Riesgo inundación'}],acc:'Las 9 JAC con Obras Pedagógicas son el capital más importante — escalar a 20 JAC en 2026. IDIGER actuar en Patio Bonito y Tintalito (riesgo inundación). SDM comunicar avances en movilidad.'},
+  fontibon:      {n:'Fontibón',num:9,niv:'medio',ganPct:30,nlPct:5,pacPct:30,desc:'Mixto. Zona aeropuerto y empresas. Salió alcaldesa local en ago 2025. Voto moderado. Oportunidad de renovación.',ents:[{n:'SDDE',c:'#A07840',t:'Desarrollo Económico'},{n:'SDM',c:'#1A4F7A',t:'Movilidad'},{n:'SDGobierno',c:'#1C1C1C',t:'Gobierno local'}],acc:'Alcaldía local nueva desde ago 2025 — oportunidad de arrancar fresco. SDDE activar programas de formalización empresarial. SDM con obras visibles en zona industrial y aeropuerto.'},
+  engativa:      {n:'Engativá',num:10,niv:'medio',ganPct:32,nlPct:4,pacPct:32,desc:'Localidad de clase media popular. Voto mixto. 4 JAC en Obras Pedagógicas. Humedales bajo amenaza.',ents:[{n:'IDPAC',c:'#1C1C1C',t:'4 JAC activas'},{n:'SDA',c:'#2E6B3E',t:'Humedal Jaboque'},{n:'IDRD',c:'#2E6B3E',t:'Recreación'}],acc:'SDA reforzar protección del humedal Jaboque. Las 4 JAC en programa son visibles — comunicar. IDRD con parques activos es el punto de contacto más positivo. Real potencial de recuperar voto moderado.'},
+  suba:          {n:'Suba',num:11,niv:'alto',ganPct:36,nlPct:4,pacPct:36,desc:'Segunda localidad más poblada. Mixta. CDC Tibabuyes (modelo MAS Bienestar de Galán) ya opera — es el único logro de salud visible en Suba.',ents:[{n:'SDS',c:'#8B2020',t:'CDC Tibabuyes activo'},{n:'SDIS',c:'#4A235A',t:'2 comedores nuevos'},{n:'IDRD',c:'#2E6B3E',t:'Recreación y deporte'}],acc:'CDC Tibabuyes es el caso de éxito a comunicar masivamente. SDS debe expandir el modelo. SDIS con adulto mayor activo. Mayor potencial de recuperación de voto moderado en la ciudad.'},
+  barriosunidos: {n:'Barrios Unidos',num:12,niv:'bajo',ganPct:30,nlPct:6,pacPct:28,desc:'Clase media y comercio. Voto moderado. NBI bajo. Preocupaciones: movilidad y seguridad.',ents:[{n:'SDM',c:'#1A4F7A',t:'Movilidad'},{n:'SDSCJ',c:'#8B2020',t:'Seguridad'},{n:'SCRD',c:'#7B341E',t:'Cultura'}],acc:'Movilidad es la prioridad. SDM con comunicación clara. SDSCJ presencia en corredores comerciales. SCRD con actividades culturales en espacio público.'},
+  teusaquillo:   {n:'Teusaquillo',num:13,niv:'bajo',ganPct:40,nlPct:7,pacPct:22,desc:'Estrato medio-alto. Voto histórico de Alianza Verde migró al CD. El Nuevo Liberalismo tuvo el mejor desempeño relativo aquí pero insuficiente.',ents:[{n:'SCRD',c:'#7B341E',t:'Cultura'},{n:'IDRD',c:'#2E6B3E',t:'Parques y ciclovía'},{n:'SDM',c:'#1A4F7A',t:'Movilidad sostenible'}],acc:'El único lugar donde el NL tuvo algo de tracción. SCRD e IDRD con presencia en parques son el vínculo más directo. Priorizar calidad de espacio público y movilidad sostenible.'},
+  martires:      {n:'Los Mártires',num:14,niv:'alto',ganPct:40,nlPct:3,pacPct:40,desc:'Zona Samper Mendoza y economía informal. 1 comedor nuevo de Galán. Alta percepción de inseguridad.',ents:[{n:'SDIS',c:'#4A235A',t:'1 comedor nuevo'},{n:'UAESP',c:'#888',t:'Ruta de aseo'},{n:'SDGobierno',c:'#1C1C1C',t:'Convivencia'}],acc:'El comedor nuevo es el activo más visible — comunicarlo. UAESP garantizar rutas en Samper Mendoza. SDGobierno con presencia en convivencia nocturna. El ciudadano valora presencia institucional directa.'},
+  antonionarino: {n:'Antonio Nariño',num:15,niv:'medio',ganPct:32,nlPct:5,pacPct:30,desc:'Localidad pequeña y compacta. Voto mixto. NBI moderado. Alta potencial de impacto con acciones concretas por su tamaño.',ents:[{n:'SDIS',c:'#4A235A',t:'Integración Social'},{n:'SDSCJ',c:'#8B2020',t:'Seguridad'},{n:'SDS',c:'#8B2020',t:'Salud'}],acc:'Localidad compacta — una jornada de Distrito Escucha tiene alto impacto. SDIS y SDS con presencia directa. Potencial de vitrina de gestión visible por su tamaño reducido.'},
+  puentearanda:  {n:'Puente Aranda',num:16,niv:'medio',ganPct:30,nlPct:5,pacPct:30,desc:'Zona industrial y clase media. Voto disputado. Preocupaciones: empleo industrial y movilidad.',ents:[{n:'SDDE',c:'#A07840',t:'Desarrollo Económico'},{n:'SDM',c:'#1A4F7A',t:'Movilidad vías ind.'},{n:'SDA',c:'#2E6B3E',t:'Control emisiones'}],acc:'SDDE articular con sector industrial para formalización y empleo. SDM con obras en vías industriales. SDA con control de emisiones — preocupación visible para vecinos del sector.'},
+  candelaria:    {n:'La Candelaria',num:17,niv:'medio',ganPct:38,nlPct:4,pacPct:38,desc:'Centro histórico patrimonial. Pequeña. Voto de izquierda estudiantil y cultural.',ents:[{n:'IDPC',c:'#7B341E',t:'Patrimonio Cultural'},{n:'SDIS',c:'#4A235A',t:'Integración Social'},{n:'SDGobierno',c:'#1C1C1C',t:'Gobierno local'}],acc:'IDPC con restauración del patrimonio es el activo más poderoso. SDIS con programas para población vulnerable estudiantil. Presencia cultural visible genera conexión con el electorado.'},
+  rafaeluribe:   {n:'Rafael Uribe Uribe',num:18,niv:'critico',ganPct:44,nlPct:3,pacPct:44,desc:'Sur popular. Voto de izquierda arraigado. 3 comedores nuevos de Galán y Mejora Tu Casa activo. Hay logros reales que no se comunican.',ents:[{n:'SDIS',c:'#4A235A',t:'3 comedores activos'},{n:'CVP',c:'#A07840',t:'Mejora Tu Casa activo'},{n:'SCRD',c:'#7B341E',t:'Nueva ronda 2026'},{n:'IDPAC',c:'#1C1C1C',t:'Ampliar JAC'}],acc:'3 comedores + Mejora Tu Casa activo son el capital de Galán aquí. SCRD con la nueva ronda 2026 debe llegar. IDPAC ampliar JAC en programa. Los logros son reales — el problema es que no se comunican bien.'},
+  ciudadbolivar: {n:'Ciudad Bolívar',num:19,niv:'critico',ganPct:50,nlPct:2,pacPct:50,desc:'La localidad con mayor NBI. Voto de izquierda dominante. 4 comedores nuevos de Galán. SDH-H y CVP muy rezagados. Máxima brecha entre logros y percepción.',ents:[{n:'CVP',c:'#A07840',t:'Mejora Tu Casa'},{n:'SDP',c:'#1E4060',t:'Legalizar barrios'},{n:'SDIS',c:'#4A235A',t:'4 comedores activos'},{n:'SDS',c:'#8B2020',t:'SER — replicar Tibabuyes'},{n:'SCRD',c:'#7B341E',t:'Recursos 2026 aprobados'}],acc:'ZONA MÁS CRÍTICA. 4 comedores y Mejora Tu Casa son reales pero insuficientes. SDP legalizar urgente Méndez, La Cumbre, El Paraíso. SDS replicar modelo Tibabuyes en el sur. SCRD activar recursos 2026. El alcalde debe hacer recorrido visible con la comunidad.'},
+  sumapaz:       {n:'Sumapaz',num:20,niv:'alto',ganPct:45,nlPct:1,pacPct:45,desc:'Rural. La localidad más extensa pero menos poblada. Muy baja presencia institucional. Voto campesino dominante.',ents:[{n:'SDA',c:'#2E6B3E',t:'Ambiente rural'},{n:'SDP',c:'#1E4060',t:'Ordenamiento rural'},{n:'SDGobierno',c:'#1C1C1C',t:'Alcaldía local'}],acc:'La más olvidada institucionalmente. Cualquier presencia visible tiene impacto alto porque la barra es muy baja. SDA con programas ambientales rurales. Alcaldía local activa.'}
+};
+
+const NIV_FILL = { critico:'#8B3CF7', alto:'#B380FF', medio:'#888888', bajo:'#1A4F7A' };
+const ENT_FILL_LEVELS = ['#1B5E20','#F57F17','#E65100','#D32F2F','#B71C1C'];
+
+let curView = 'electoral';
+let curLoc = null;
+
+function colorForLoc(id, view) {
+  const d = DATA[id]; if (!d) return '#ccc';
+  if (view === 'electoral') return NIV_FILL[d.niv] || '#888';
+  const n = d.ents.length;
+  return ENT_FILL_LEVELS[Math.min(n, ENT_FILL_LEVELS.length-1)];
+}
+
+function paintMap() {
+  Object.keys(DATA).forEach(id => {
+    const g = document.getElementById('l-'+id); if (!g) return;
+    const p = g.querySelector('polygon') || g.querySelector('path'); if (!p) return;
+    p.setAttribute('fill', colorForLoc(id, curView));
+    p.setAttribute('stroke-width', curLoc===id ? '2.5' : '1.2');
+    p.setAttribute('stroke', curLoc===id ? '#FFD700' : 'white');
+  });
+}
+
+function setView(v) {
+  curView = v;
+  document.getElementById('tab-e').className = 'tab'+(v==='electoral'?' on':'');
+  document.getElementById('tab-n').className = 'tab'+(v==='entidades'?' on':'');
+  paintMap(); updateLegend();
+}
+
+function updateLegend() {
+  const el = document.getElementById('legend');
+  if (curView === 'electoral') {
+    el.innerHTML = `<div style="font-size:11px;font-weight:700;color:#666;margin-bottom:5px;">Fuerza ganadora — Cámara Bogotá 2026</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <div class="legend-row"><div class="legend-sq" style="background:#8B3CF7"></div>Pacto Histórico dominante</div>
+      <div class="legend-row"><div class="legend-sq" style="background:#B380FF"></div>Pacto Histórico fuerte</div>
+      <div class="legend-row"><div class="legend-sq" style="background:#888"></div>Mixto / recuperable</div>
+      <div class="legend-row"><div class="legend-sq" style="background:#1A4F7A"></div>Centro Democrático</div>
+    </div>`;
+  } else {
+    el.innerHTML = `<div style="font-size:11px;font-weight:700;color:#666;margin-bottom:5px;">Urgencia de presencia institucional</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <div class="legend-row"><div class="legend-sq" style="background:#D32F2F"></div>Muy urgente (4-5 entidades)</div>
+      <div class="legend-row"><div class="legend-sq" style="background:#E65100"></div>Urgente (3 entidades)</div>
+      <div class="legend-row"><div class="legend-sq" style="background:#F57F17"></div>Importante (2 entidades)</div>
+      <div class="legend-row"><div class="legend-sq" style="background:#1B5E20"></div>Refuerzo puntual</div>
+    </div>`;
+  }
+}
+
+function selLoc(id) {
+  curLoc = id; paintMap();
+  const d = DATA[id]; if (!d) return;
+  document.getElementById('map-hint').style.display = 'none';
+  const badge = d.niv==='critico'?'<span class="alerta">ZONA CRÍTICA</span>':d.niv==='alto'?'<span class="alerta">ZONA CRÍTICA</span>':d.niv==='medio'?'<span class="recup">RECUPERABLE</span>':'<span class="oposi">OPOSICIÓN</span>';
+  const bars = `
+    <div class="bar-row"><div class="bar-label">Pacto Histórico</div><div class="bar-track"><div class="bar-fill" style="width:${d.pacPct*2}%;background:#8B3CF7"></div></div><div class="bar-val" style="color:#8B3CF7">~${d.pacPct}%</div></div>
+    <div class="bar-row"><div class="bar-label">Nuevo Liberal.</div><div class="bar-track"><div class="bar-fill" style="width:${d.nlPct*10}%;background:#D32F2F"></div></div><div class="bar-val" style="color:#D32F2F">~${d.nlPct}%</div></div>`;
+  const chips = d.ents.map(e=>`<span class="ent-chip" style="background:${e.c}22;color:${e.c};border:1px solid ${e.c}55;">${e.n} · <span style="opacity:0.7;font-weight:400;">${e.t}</span></span>`).join('');
+  document.getElementById('detail').innerHTML = `
+    <div class="loc-name">${d.n} ${badge}</div>
+    <div class="loc-sub" style="margin-bottom:10px;">Localidad ${d.num}</div>
+    <div class="sec-label">Resultado electoral estimado</div>${bars}
+    <div class="sec-label">¿Qué pasó aquí?</div>
+    <div style="font-size:12px;color:#555;line-height:1.65;">${d.desc}</div>
+    <div class="sec-label">Entidades del gabinete que deben llegar</div>
+    <div style="margin-bottom:8px;">${chips}</div>
+    <div class="sec-label">¿Cómo y para qué?</div>
+    <div style="font-size:12px;color:#555;line-height:1.65;">${d.acc}</div>`;
+}
+
+paintMap(); updateLegend();
+</script>
+</body>
+</html>
